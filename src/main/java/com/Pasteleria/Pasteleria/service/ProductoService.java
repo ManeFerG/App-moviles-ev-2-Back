@@ -15,23 +15,28 @@ public class ProductoService {
     }
 
     public List<Producto> getProductos() {
-        return productoRepository.obtenerProductos();
+        
+        return productoRepository.findAll();
     }
 
     public Producto saveProducto(Producto producto) {
-        return productoRepository.guardar(producto);
+        
+        return productoRepository.save(producto);
     }
 
     public Producto getProductoId(int id) {
-        return productoRepository.buscarPorId(id);
+        
+        return productoRepository.findById(id).orElse(null);
     }
 
     public Producto updateProducto(Producto producto) {
-        return productoRepository.actualizar(producto);
+      
+        return productoRepository.save(producto);
     }
 
     public String deleteProducto(int id) {
-        productoRepository.eliminar(id);
+        
+        productoRepository.deleteById(id);
         return "Producto eliminado";
     }
 }

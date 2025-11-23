@@ -8,10 +8,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("/productos")
+@RequestMapping("/api/v1/productos")  
 @Tag(name = "Productos", description = "Operaciones relacionadas con los productos")
 @CrossOrigin(origins = {"*"})
 public class ProductoController {
+
 
     private final ProductoService productoService;
 

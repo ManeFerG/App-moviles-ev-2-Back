@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "usuarios", 
        uniqueConstraints = { 
-           @UniqueConstraint(columnNames = "email") // mail unico
+           @UniqueConstraint(columnNames = "email") 
        })
 @Data
 @NoArgsConstructor
@@ -26,7 +26,7 @@ public class Usuario {
     private String email;
 
     @Column(nullable = false)
-    private String password; // Aquí guardaremos la contraseña HASHEADA
+    private String password;
 
     // Relación Muchos-a-Muchos con Rol
     // FetchType.EAGER carga los roles junto con el usuario

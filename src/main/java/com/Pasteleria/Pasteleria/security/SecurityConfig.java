@@ -39,33 +39,48 @@ public class SecurityConfig {
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
 
-                // Swagger
+                // =====================
+                // SWAGGER / DOCS
+                // =====================
                 .requestMatchers(
                         "/v3/api-docs/**",
                         "/swagger-ui/**",
                         "/swagger-ui.html"
                 ).permitAll()
 
-                // Login / registro públicos
+                // =====================
+                // AUTENTICACIÓN
+                // =====================
+                // login y registro públicos
                 .requestMatchers("/api/v1/auth/**").permitAll()
 
-                // Productos:
+                // =====================
+                // PRODUCTOS
+                // =====================
+                // catálogo público
                 .requestMatchers(HttpMethod.GET, "/api/v1/productos/**").permitAll()
+                // crear / actualizar / eliminar productos: solo ADMIN
                 .requestMatchers("/api/v1/productos/**").hasRole("ADMIN")
 
-                // Órdenes:
-                .requestMatchers("/api/v1/ordenes/**").hasAnyRole("ADMIN", "VENDEDOR")
+                // =====================
+                // ÓRDENES
+                // =====================
+                // Crear orden desde el carrito → SOLO CLIENTE
+                .requestMatchers(HttpMethod.POST, "/api/v1/ordenes/**").hasRole("CLIENTE")
 
+                // Ver órdenes → ADMIN o VENDEDOR
+                .requestMatchers(HttpMethod.GET, "/api/v1/ordenes/**").hasAnyRole("ADMIN", "VENDEDOR")
+
+                // =====================
+                // RESTO DE ENDPOINTS
+                // =====================
                 .anyRequest().authenticated()
             );
 
-        // ❌ SIN httpBasic -> se acaba el popup
-        // .httpBasic(httpBasic -> {});  // <- esto lo quitamos
-
-        // Provider para validar usuarios/contraseñas (login)
+        // Autenticación con nuestro UserDetailsService + BCrypt
         http.authenticationProvider(authenticationProvider());
 
-        // Filtro JWT ANTES del filtro de formulario/username-password
+        // Filtro JWT antes del filtro de username/password
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
